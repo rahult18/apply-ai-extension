@@ -18,24 +18,30 @@ class Supabase():
     def __init__(self) -> None:
         url: str = os.environ.get("SUPABASE_URL")
         key: str = os.environ.get("SUPABASE_KEY")
-        db_name: str = os.environ.get("DB_NAME")
-        db_user: str = os.environ.get("DB_USER")
-        db_password: str = os.environ.get("DB_PASSWORD")
-        db_host: str = os.environ.get("DB_HOST")
-        db_port: str = os.environ.get("DB_PORT")
+        self._db_name: str = os.environ.get("DB_NAME")
+        self._db_user: str = os.environ.get("DB_USER")
+        self._db_password: str = os.environ.get("DB_PASSWORD")
+        self._db_host: str = os.environ.get("DB_HOST")
+        self._db_port: str = os.environ.get("DB_PORT", "5432")
 
-        # ThreadedConnectionPool gives each thread its own connection,
-        # preventing thread-safety issues from sharing a single psycopg2 connection.
-        self.db_pool = ThreadedConnectionPool(
-            minconn=1,
-            maxconn=10,
-            user=db_user,
-            password=db_password,
-            host=db_host,
-            port=db_port,
-            dbname=db_name,
-        )
+        self._db_pool: ThreadedConnectionPool | None = None
         self.client: Client = create_client(url, key)
+
+    @property
+    def db_pool(self) -> ThreadedConnectionPool:
+        if self._db_pool is None:
+            # ThreadedConnectionPool gives each thread its own connection,
+            # preventing thread-safety issues from sharing a single psycopg2 connection.
+            self._db_pool = ThreadedConnectionPool(
+                minconn=1,
+                maxconn=10,
+                user=self._db_user,
+                password=self._db_password,
+                host=self._db_host,
+                port=self._db_port,
+                dbname=self._db_name,
+            )
+        return self._db_pool
 
     @contextmanager
     def get_cursor(self):
