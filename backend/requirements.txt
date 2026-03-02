@@ -4,7 +4,7 @@ requests
 uvicorn
 aiohttp
 google-genai
-dotenv
+python-dotenv
 pydantic
 supabase
 psycopg2-binary

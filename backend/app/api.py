@@ -1,3 +1,4 @@
+import os
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 import logging
@@ -19,10 +20,16 @@ logger = logging.getLogger(__name__)
 # Creating the FastAPI backend
 app = fastapi.FastAPI()
 
+# Build allowed origins from env var + localhost fallback
+_frontend_url = os.getenv("FRONTEND_URL", "")
+allowed_origins = ["http://localhost:3000"]
+if _frontend_url:
+    allowed_origins.append(_frontend_url)
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Next.js dev server
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
