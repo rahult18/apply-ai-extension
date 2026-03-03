@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "ApplyAI",
     "version": "1.0.0",
-    "description": "ApplyAI helps you apply to jobs faster. Automatically fills job applications, matches your resume to job descriptions, and tracks your applications — all from your browser.",
+    "description": "Apply to jobs faster with AI-powered autofill, application tracking, and resume matching on major job boards.",
     "homepage_url": "https://apply-ai-extension.vercel.app",
     "icons": {
         "16": "assets/icon16.png",
