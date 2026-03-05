@@ -248,7 +248,7 @@ def parse_resume(user_id: str, resume_url: str, llm: LLM):
             resume_data = json.dumps(parsed_resume.model_dump())
 
             # Update user's profile in the database with parsed resume data
-            update_query = "UPDATE public.users SET resume_text = %s, resume_profile = %s, resume_parse_status = 'Completed', resume_parsed_at = NOW() WHERE id = %s"
+            update_query = "UPDATE public.users SET resume_text = %s, resume_profile = %s, resume_parse_status = 'COMPLETED', resume_parsed_at = NOW() WHERE id = %s"
             cursor.execute(update_query, (extracted_resume_text, resume_data, user_id))
             pass  # commit handled by get_raw_cursor context manager
             logger.info(f"Successfully parsed and updated resume for user {user_id}")

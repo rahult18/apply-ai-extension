@@ -89,7 +89,7 @@ class UserRepository:
             "users",
             updates,
             {"id": user_id},
-            extra_sets=["resume_parse_status = 'In progress'", "updated_at = NOW()"]
+            extra_sets=["updated_at = NOW()"]
         )
         if not query:
             return
@@ -102,7 +102,7 @@ class UserRepository:
         """Update user's parsed resume profile."""
         with get_cursor(self.pool) as cursor:
             cursor.execute(
-                "UPDATE users SET resume_profile = %s, resume_parse_status = 'Done', updated_at = NOW() WHERE id = %s",
+                "UPDATE users SET resume_profile = %s, resume_parse_status = 'COMPLETED', updated_at = NOW() WHERE id = %s",
                 (json.dumps(resume_profile), user_id)
             )
             pass  # commit handled by get_cursor pool context manager

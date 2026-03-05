@@ -270,7 +270,10 @@ export default function ProfilePage() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.detail || "Failed to update profile")
+        const detail = Array.isArray(errorData.detail)
+          ? errorData.detail.map((e: { msg: string }) => e.msg).join("; ")
+          : errorData.detail
+        throw new Error(detail || "Failed to update profile")
       }
 
       setSuccess(true)

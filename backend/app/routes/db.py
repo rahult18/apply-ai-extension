@@ -118,8 +118,8 @@ async def update_profile(
     state: Optional[str] = Form(None),
     zip_code: Optional[str] = Form(None),
     country: Optional[str] = Form(None),
-    authorized_to_work_in_us: Optional[bool] = Form(None),
-    visa_sponsorship: Optional[bool] = Form(None),
+    authorized_to_work_in_us: Optional[str] = Form(None),  # "true"/"false" string from form
+    visa_sponsorship: Optional[str] = Form(None),  # "true"/"false" string from form
     visa_sponsorship_type: Optional[str] = Form(None),
     desired_salary: Optional[float] = Form(None),
     desired_location: Optional[str] = Form(None),  # Will be JSON string from frontend
@@ -127,7 +127,7 @@ async def update_profile(
     race: Optional[str] = Form(None),
     veteran_status: Optional[str] = Form(None),
     disability_status: Optional[str] = Form(None),
-    open_to_relocation: Optional[bool] = Form(None),
+    open_to_relocation: Optional[str] = Form(None),  # "true"/"false" string from form
     resume_profile: Optional[str] = Form(None),  # JSON string from frontend
     background_tasks: BackgroundTasks = None
 ):
@@ -144,6 +144,16 @@ async def update_profile(
         user_id = user_response.user.id
         resume_url = None
         uploaded_file_path = None
+
+        # Convert string booleans from multipart form data to Python booleans
+        def _parse_bool_field(value: Optional[str]) -> Optional[bool]:
+            if value is None:
+                return None
+            return value.lower() in ("true", "1", "yes", "on")
+
+        authorized_to_work_in_us_bool = _parse_bool_field(authorized_to_work_in_us)
+        visa_sponsorship_bool = _parse_bool_field(visa_sponsorship)
+        open_to_relocation_bool = _parse_bool_field(open_to_relocation)
 
         # Handle optional resume upload
         if resume is not None:
@@ -219,8 +229,8 @@ async def update_profile(
             "state": state,
             "zip_code": zip_code,
             "country": country,
-            "authorized_to_work_in_us": authorized_to_work_in_us,
-            "visa_sponsorship": visa_sponsorship,
+            "authorized_to_work_in_us": authorized_to_work_in_us_bool,
+            "visa_sponsorship": visa_sponsorship_bool,
             "visa_sponsorship_type": visa_sponsorship_type,
             "desired_salary": desired_salary,
             "desired_location": desired_location_parsed,
@@ -228,12 +238,16 @@ async def update_profile(
             "race": race,
             "veteran_status": veteran_status,
             "disability_status": disability_status,
-            "open_to_relocation": open_to_relocation,
+            "open_to_relocation": open_to_relocation_bool,
             "resume_profile": resume_profile_parsed,
         }
 
         # Filter out None values
         updates = {k: v for k, v in updates.items() if v is not None}
+
+        # Set resume_parse_status to PENDING only when a new resume is being uploaded
+        if resume_url is not None:
+            updates["resume_parse_status"] = "PENDING"
 
         if not updates:
             raise HTTPException(status_code=400, detail="No fields provided to update")
