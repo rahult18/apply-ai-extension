@@ -17,6 +17,9 @@ import json
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Module-level singleton to avoid creating a new connection pool on every DAG invocation
+_supabase = Supabase()
+
 # DAG state representation
 class AutofillAgentState(TypedDict):
     # The original input to the graph
@@ -373,8 +376,7 @@ class DAG():
         status: RunStatus = "failed" if errors else "completed"
 
         try:
-            supabase = Supabase()
-            with supabase.get_raw_cursor() as cursor:
+            with _supabase.get_raw_cursor() as cursor:
                 cursor.execute(
                     "UPDATE public.autofill_runs SET plan_json=%s, plan_summary=%s, status=%s, updated_at=NOW() WHERE id=%s",
                     (json.dumps(plan_json), json.dumps(plan_summary), status, run_id),

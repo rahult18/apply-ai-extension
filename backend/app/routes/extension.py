@@ -461,7 +461,8 @@ def get_autofill_plan(body: AutofillPlanRequest, authorization: str = Header(Non
     except HTTPException:
         raise
     except Exception as e:
-        logger.info(f"Unable to generate autofill plan for run_id {autofill_agent_input.run_id}: {str(e)}")
+        _run_id = getattr(locals().get('autofill_agent_input'), 'run_id', locals().get('autofill_run_id', 'unknown'))
+        logger.error(f"Unable to generate autofill plan for run_id {_run_id}: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="Unable to generate autofill plan")
     
 

@@ -171,20 +171,26 @@ def parse_resume(user_id: str, resume_url: str, llm: LLM):
     :type resume_url: str
     """
     try:
-        # fetch the resume from supabase storage
+        # Step 1: Fetch the resume path from DB (release connection immediately after)
         with supabase.get_raw_cursor() as cursor:
             cursor.execute("SELECT resume FROM public.users WHERE id = %s", (user_id,))
-            resume_path = cursor.fetchone()[0]
-            resume_file = supabase.client.storage.from_("user-documents").download(resume_path)
-            # read the resume file using fitz
-            doc = fitz.open(stream=resume_file, filetype="pdf")
-            extracted_resume_text = ""
-            for page in doc:
-                extracted_resume_text += page.get_text()
-            doc.close()
+            row = cursor.fetchone()
+            resume_path = row[0] if row else None
 
-            # Use LLM to parse the resume text
-            prompt = f"""
+        if not resume_path:
+            logger.error(f"No resume path found for user {user_id}")
+            return
+
+        # Step 2: Download and process resume (outside DB connection)
+        resume_file = supabase.client.storage.from_("user-documents").download(resume_path)
+        doc = fitz.open(stream=resume_file, filetype="pdf")
+        extracted_resume_text = ""
+        for page in doc:
+            extracted_resume_text += page.get_text()
+        doc.close()
+
+        # Step 3: Call LLM to parse the resume text (outside DB connection)
+        prompt = f"""
             You are an expert resume parser. Below is the extracted text from a user's resume. Please extract the following information and return it in a structured JSON format without any extra text or codefences.
 
             Resume Text:
@@ -236,22 +242,22 @@ def parse_resume(user_id: str, resume_url: str, llm: LLM):
             ```
             """
 
-            response = llm.client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-                config={
-                    "response_mime_type": "application/json",
-                    "response_json_schema": ExtractedResumeModel.model_json_schema(),
-                }
-            )
-            parsed_resume = ExtractedResumeModel.model_validate_json(response.text)
-            resume_data = json.dumps(parsed_resume.model_dump())
+        response = llm.client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+                "response_json_schema": ExtractedResumeModel.model_json_schema(),
+            }
+        )
+        parsed_resume = ExtractedResumeModel.model_validate_json(response.text)
+        resume_data = json.dumps(parsed_resume.model_dump())
 
-            # Update user's profile in the database with parsed resume data
+        # Step 4: Update DB with parsed results (new connection, fast write)
+        with supabase.get_raw_cursor() as cursor:
             update_query = "UPDATE public.users SET resume_text = %s, resume_profile = %s, resume_parse_status = 'COMPLETED', resume_parsed_at = NOW() WHERE id = %s"
             cursor.execute(update_query, (extracted_resume_text, resume_data, user_id))
-            pass  # commit handled by get_raw_cursor context manager
-            logger.info(f"Successfully parsed and updated resume for user {user_id}")
+        logger.info(f"Successfully parsed and updated resume for user {user_id}")
 
     except Exception as e:
         logger.error(f"Error parsing resume for user {user_id} from {resume_url}: {str(e)}")

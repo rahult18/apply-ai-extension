@@ -69,10 +69,11 @@ class UserRepository:
             return cursor.fetchone()
 
     def create(self, user_id: str, email: str) -> None:
-        """Create a new user record."""
+        """Create a new user record. ON CONFLICT DO NOTHING handles the case where
+        the handle_new_user DB trigger already inserted the row."""
         with get_cursor(self.pool) as cursor:
             cursor.execute(
-                "INSERT INTO users (id, email) VALUES (%s, %s)",
+                "INSERT INTO users (id, email) VALUES (%s, %s) ON CONFLICT (id) DO NOTHING",
                 (user_id, email)
             )
             pass  # commit handled by get_cursor pool context manager
