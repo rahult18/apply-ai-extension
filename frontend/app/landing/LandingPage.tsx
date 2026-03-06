@@ -120,13 +120,7 @@ export default function LandingPage() {
                             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 px-8 py-3.5 rounded-xl transition-colors shadow-md hover:shadow-lg"
                         >
                             {/* Chrome logo */}
-                            <svg className="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="4.5" fill="white" />
-                                <path d="M12 7.5h9.196A9.5 9.5 0 0 0 2.804 7.5H12Z" fill="#EA4335" />
-                                <path d="M7.5 12a4.5 4.5 0 0 0 2.25 3.897L5.155 7.5A9.5 9.5 0 0 0 12 21.5l4.598-7.964A4.5 4.5 0 0 0 7.5 12Z" fill="#34A853" />
-                                <path d="M16.5 12a4.5 4.5 0 0 0-2.25-3.897L18.845 16.5A9.5 9.5 0 0 0 21.5 12H16.5Z" fill="#FBBC05" />
-                                <circle cx="12" cy="12" r="2.5" fill="white" />
-                            </svg>
+                            <img src="/chrome-logo.svg" alt="Chrome" className="h-5 w-5 flex-shrink-0" />
                             Add to Chrome — It&apos;s Free
                         </a>
                         <Link
@@ -229,13 +223,7 @@ export default function LandingPage() {
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2.5 text-base font-semibold text-blue-700 bg-white hover:bg-blue-50 px-8 py-3.5 rounded-xl transition-colors shadow-md"
                         >
-                            <svg className="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="4.5" fill="#4285F4" />
-                                <path d="M12 7.5h9.196A9.5 9.5 0 0 0 2.804 7.5H12Z" fill="#EA4335" />
-                                <path d="M7.5 12a4.5 4.5 0 0 0 2.25 3.897L5.155 7.5A9.5 9.5 0 0 0 12 21.5l4.598-7.964A4.5 4.5 0 0 0 7.5 12Z" fill="#34A853" />
-                                <path d="M16.5 12a4.5 4.5 0 0 0-2.25-3.897L18.845 16.5A9.5 9.5 0 0 0 21.5 12H16.5Z" fill="#FBBC05" />
-                                <circle cx="12" cy="12" r="2.5" fill="white" />
-                            </svg>
+                            <img src="/chrome-logo.svg" alt="Chrome" className="h-5 w-5 flex-shrink-0" />
                             Add to Chrome
                         </a>
                         <Link
