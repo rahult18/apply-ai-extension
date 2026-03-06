@@ -32,12 +32,15 @@ const features = [
     },
 ]
 
+const CHROME_STORE_URL = "https://chromewebstore.google.com/detail/ApplyAI/ckknfphllkanlgikfaadoikjionkbmpf"
+
 const steps = [
     {
         number: "1",
         title: "Install the Extension",
         description:
             "Add ApplyAI to Chrome from the Web Store. It takes under a minute.",
+        href: CHROME_STORE_URL,
     },
     {
         number: "2",
@@ -110,26 +113,33 @@ export default function LandingPage() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a
+                            href="https://chromewebstore.google.com/detail/ApplyAI/ckknfphllkanlgikfaadoikjionkbmpf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 px-8 py-3.5 rounded-xl transition-colors shadow-md hover:shadow-lg"
+                        >
+                            {/* Chrome logo */}
+                            <svg className="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="4.5" fill="white" />
+                                <path d="M12 7.5h9.196A9.5 9.5 0 0 0 2.804 7.5H12Z" fill="#EA4335" />
+                                <path d="M7.5 12a4.5 4.5 0 0 0 2.25 3.897L5.155 7.5A9.5 9.5 0 0 0 12 21.5l4.598-7.964A4.5 4.5 0 0 0 7.5 12Z" fill="#34A853" />
+                                <path d="M16.5 12a4.5 4.5 0 0 0-2.25-3.897L18.845 16.5A9.5 9.5 0 0 0 21.5 12H16.5Z" fill="#FBBC05" />
+                                <circle cx="12" cy="12" r="2.5" fill="white" />
+                            </svg>
+                            Add to Chrome — It&apos;s Free
+                        </a>
                         <Link
                             href="/signup"
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 px-8 py-3.5 rounded-xl transition-colors shadow-md hover:shadow-lg"
-                        >
-                            Get Started Free
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                            </svg>
-                        </Link>
-                        <Link
-                            href="/login"
                             className="w-full sm:w-auto inline-flex items-center justify-center text-base font-semibold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 px-8 py-3.5 rounded-xl transition-colors shadow-sm"
                         >
-                            Sign In
+                            Get Started Free
                         </Link>
                     </div>
 
                     {/* Social proof */}
                     <p className="mt-8 text-sm text-gray-400">
-                        Free to use · No credit card required
+                        Free to use · No credit card required · Available on Chrome
                     </p>
                 </div>
             </section>
@@ -185,6 +195,17 @@ export default function LandingPage() {
                                 </div>
                                 <h3 className="font-semibold text-gray-900 text-lg">{step.title}</h3>
                                 <p className="text-sm text-gray-500 leading-relaxed max-w-xs">{step.description}</p>
+                                {step.href && (
+                                    <a
+                                        href={step.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                                    >
+                                        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3zm-1 2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8h-2v8H5V7h8V5z" /></svg>
+                                        Open Chrome Web Store
+                                    </a>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -198,18 +219,35 @@ export default function LandingPage() {
                         Ready to apply smarter?
                     </h2>
                     <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto">
-                        Create your free account, upload your resume, and start autofilling
-                        applications today.
+                        Install the extension, create your free account, and start autofilling
+                        applications in minutes.
                     </p>
-                    <Link
-                        href="/signup"
-                        className="inline-flex items-center gap-2 text-base font-semibold text-blue-700 bg-white hover:bg-blue-50 px-8 py-3.5 rounded-xl transition-colors shadow-md"
-                    >
-                        Get Started Free
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
-                    </Link>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a
+                            href="https://chromewebstore.google.com/detail/ApplyAI/ckknfphllkanlgikfaadoikjionkbmpf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2.5 text-base font-semibold text-blue-700 bg-white hover:bg-blue-50 px-8 py-3.5 rounded-xl transition-colors shadow-md"
+                        >
+                            <svg className="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="4.5" fill="#4285F4" />
+                                <path d="M12 7.5h9.196A9.5 9.5 0 0 0 2.804 7.5H12Z" fill="#EA4335" />
+                                <path d="M7.5 12a4.5 4.5 0 0 0 2.25 3.897L5.155 7.5A9.5 9.5 0 0 0 12 21.5l4.598-7.964A4.5 4.5 0 0 0 7.5 12Z" fill="#34A853" />
+                                <path d="M16.5 12a4.5 4.5 0 0 0-2.25-3.897L18.845 16.5A9.5 9.5 0 0 0 21.5 12H16.5Z" fill="#FBBC05" />
+                                <circle cx="12" cy="12" r="2.5" fill="white" />
+                            </svg>
+                            Add to Chrome
+                        </a>
+                        <Link
+                            href="/signup"
+                            className="inline-flex items-center gap-2 text-base font-semibold text-white border-2 border-white/60 hover:bg-white/10 px-8 py-3.5 rounded-xl transition-colors"
+                        >
+                            Create Free Account
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </Link>
+                    </div>
                 </div>
             </section>
 
